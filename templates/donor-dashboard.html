@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Donor Dashboard</title>
+  <link rel="stylesheet" href="/static/dashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">Blood Bank Management System</div>
+      <nav>
+        <ul>
+          <li id="homeBtn"><i class="fas fa-home"></i> Home</li>
+          <li id="makeRequestBtn"><i class="fas fa-hand-holding-droplet"></i> Make Request</li>
+          <li id="makeDonationBtn"><i class="fas fa-hand-holding-medical"></i> Make Donation</li>
+          <li id="historyBtn"><i class="fas fa-history"></i> Request History</li>
+          <li id="donationHistoryBtn"><i class="fas fa-notes-medical"></i> Donation History</li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard">
+      <div class="top-bar">
+        <h1>My Dashboard</h1>
+        <button class="logout" id="logoutBtn">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+
+      <div id="dashboard-content">
+        <!-- Content will be loaded here dynamically -->
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="/static/dashboard.js"></script>
+</body>
+</html>

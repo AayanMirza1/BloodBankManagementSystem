@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Blood Bucket</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/signup_style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="left">
+      <img src="/static/assets/blood-bank-poster.png" alt="Blood Bank Poster">
+      <h3>Blood Bucket</h3>
+    </div>
+    <div class="right">
+      <div class="form-container">
+        <h2>Login</h2>
+        <div class="input-group">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" placeholder="Enter your email">
+        </div>
+        <div class="input-group">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter your password">
+        </div>
+
+        
+
+        <button class="submit-btn" id="loginBtn">Sign In</button>
+        <div class="switch-link">
+          Don’t have an account? <a href="signup">Register</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="/static/app.js" type="module"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

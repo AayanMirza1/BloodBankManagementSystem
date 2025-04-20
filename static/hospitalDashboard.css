@@ -1,0 +1,363 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+/* === General Reset === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  display: flex;
+  height: 100vh;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+}
+
+/* === Sidebar === */
+.sidebar {
+  width: 220px;
+  background-color: #111;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar .logo {
+  color: #e60000;
+  font-weight: bold;
+  margin-bottom: 30px;
+  font-size: 18px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  padding: 12px;
+  margin-bottom: 10px;
+  background-color: #222;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.3s;
+}
+
+.sidebar ul li i {
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+.sidebar ul li:hover {
+  background-color: #333;
+}
+
+/* === Dashboard Area === */
+.dashboard {
+  flex-grow: 1;
+  padding: 24px;
+  background-color: #fff;
+  min-height: 100vh;
+}
+
+/* === Top Bar === */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to right, #d00000, #ff4d4d);
+  padding: 16px 24px;
+  color: #fff;
+  font-size: 22px;
+  font-weight: bold;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 20px;
+}
+
+.logout {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* === Dashboard Cards === */
+.dashboard-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+.card {
+  flex: 1 1 220px;
+  padding: 1.2rem;
+  border-radius: 12px;
+  background: #f9f9f9;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+  position: relative;
+}
+
+.card-total { border-left: 6px solid #007bff; }
+.card-pending { border-left: 6px solid #ffc107; }
+.card-approved { border-left: 6px solid #28a745; }
+.card-rejected { border-left: 6px solid #dc3545; }
+.card-stock {border-left: 6px solid #e60000; }
+
+
+
+/* .card-total::before { background-color: #007bff; }
+.card-pending::before { background-color: #ffc107; }
+.card-approved::before { background-color: #28a745; }
+.card-rejected::before { background-color: #dc3545; }
+.card-stock::before { background-color: #e60000; }
+.card-info::before { background-color: #6c757d; } */
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-top h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.card-top i.refresh-btn {
+  color: #007bff;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.card-top i.refresh-btn:hover {
+  transform: rotate(90deg);
+}
+
+.card p {
+  margin: 0;
+  margin-top: 12px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #222;
+}
+
+/* === Table Style === */
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 16px;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  color: #333;
+}
+
+.styled-table thead {
+  background-color: #009879;
+  color: white;
+  font-weight: bold;
+  text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.styled-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.styled-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* === Status Tags === */
+.status {
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.status.pending {
+  background-color: #ffe0b3;
+  color: #d48806;
+}
+
+.status.approved {
+  background-color: #d4edda;
+  color: #2e7d32;
+}
+
+.status.rejected {
+  background-color: #f8d7da;
+  color: #a71d2a;
+}
+
+/* === Button Styling === */
+.btn-approve,
+.btn-reject {
+  padding: 6px 14px;
+  margin: 2px 4px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+.btn-approve {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-approve:hover {
+  background-color: #218838;
+}
+
+.btn-reject {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-reject:hover {
+  background-color: #c82333;
+}
+
+/* === Form Styling === */
+form input,
+form select {
+  padding: 10px;
+  margin: 10px 0;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+form button {
+  padding: 12px;
+  background-color: crimson;
+  color: white;
+  border: none;
+  width: 100%;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+form button:hover {
+  background-color: darkred;
+}
+
+.btn-ptn {
+  border: none;
+  outline: none;
+  background: rgb(0, 188, 0);
+  padding: 10px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+
+.btn-ptn:active {
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, .5);
+}
+
+.btn-ptn2 {
+  border: none;
+  outline: none;
+  background: rgb(188, 0, 0);
+  padding: 10px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+
+.btn-ptn2:active {
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, .5);
+}
+
+/* === Responsive Design === */
+@media screen and (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-radius: 0;
+    border-right: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  .dashboard-cards {
+    flex-direction: column;
+  }
+
+  .top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 18px;
+  }
+}
+
+/* === Blood Stock Cards Grid === */
+.blood-stock {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.blood-stock .card h3 i {
+  color: red;
+}
+
+/* === Summary Cards Grid === */
+.summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.summary .card h3 i {
+  color: #007bff;
+}

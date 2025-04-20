@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/static/signup_style.css" />
+</head>
+<body>
+  <div class="container">
+
+    <!-- Left Side: Image and Branding -->
+    <div class="left">
+      <img src="/static/assets/blood-bank-poster.png" alt="Blood Bank Poster" />
+      <h3>Blood Bucket</h3>
+    </div>
+
+    <!-- Right Side: Sign Up Form -->
+    <div class="right">
+      <div class="form-container">
+        <h2>Sign Up</h2>
+
+        <!-- Full Name -->
+        <div class="input-group">
+          <label for="signupName">Full Name</label>
+          <input type="text" id="signupName" placeholder="Enter your full name" />
+        </div>
+
+        <!-- Email -->
+        <div class="input-group">
+          <label for="signupEmail">Email</label>
+          <input type="email" id="signupEmail" placeholder="Enter your email" />
+        </div>
+
+        <!-- Password -->
+        <div class="input-group">
+          <label for="signupPassword">Password</label>
+          <input type="password" id="signupPassword" placeholder="Enter your password" />
+        </div>
+
+        <!-- Blood Group -->
+        <div class="input-group">
+          <label for="signupBloodGroup">Blood Group</label>
+          <select id="signupBloodGroup">
+            <option value="">Select Blood Group</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+        </div>
+
+        <!-- City -->
+        <div class="input-group">
+          <label for="signupCity">City</label>
+          <input type="text" id="signupCity" placeholder="Enter your city" />
+        </div>
+
+        <!-- Last Donation -->
+        <div class="input-group">
+          <label for="signupLastDonation">Last Donation Date</label>
+          <input type="date" id="signupLastDonation" />
+        </div>
+
+        <!-- Disease -->
+        <div class="input-group">
+          <label for="signupDisease">Disease (if any)</label>
+          <input type="text" id="signupDisease" placeholder="Leave blank if none" />
+        </div>
+
+        <!-- Age -->
+        <div class="input-group">
+          <label for="signupAge">Age</label>
+          <input type="number" id="signupAge" placeholder="Enter your age" min="16" max="100" />
+        </div>
+
+        <!-- Gender -->
+        <div class="input-group">
+          <label>Gender</label>
+          <div class="radio-group">
+            <label><input type="radio" name="signupGender" value="Male" checked /> Male</label>
+            <label><input type="radio" name="signupGender" value="Female" /> Female</label>
+            <label><input type="radio" name="signupGender" value="Other" /> Other</label>
+          </div>
+        </div>
+
+        <!-- Register As -->
+        <div class="input-group">
+          <label>Register As</label>
+          <div class="radio-group">
+            <label><input type="radio" name="signupRole" value="donor" checked /> Donor</label>
+            <label><input type="radio" name="signupRole" value="patient" /> Patient</label>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button class="submit-btn" id="signupBtn">Sign Up</button>
+
+        <!-- Switch to Login -->
+        <div class="switch-link">
+          Already have an account? <a href="login" class="fade-link">Login</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+  <!-- Your JavaScript Logic -->
+  <script type="module" src="/static/app.js"></script>
+</body>
+</html>
