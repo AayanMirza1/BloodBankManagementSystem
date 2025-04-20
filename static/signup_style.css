@@ -62,6 +62,14 @@ body.fade-out {
   width: 0px;
 }
 
+.right-signin {
+  flex: 1;
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .form-container {
   width: 100%;
   max-width: 450px;
