@@ -250,6 +250,46 @@ section {
   margin: 0 auto 40px;
 }
 
+.about-container {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  
+}
+
+.contain-profile {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.profile-cards {
+  background-color: #ffffff00;
+  width: 250px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  padding: px;
+  transition: transform 0.3s ease;
+}
+
+.profile-cards img {
+  width: 250px;
+  object-fit: cover;
+  
+}
+
+.profile-cards h1 {
+  font-size: 30px;
+  color: white;
+  text-align: left;
+}
+
+.profile-cards p {
+  font-size: 15px;
+  color: #fffefe;
+  text-align: left;
+}
+
 .features {
   display: flex;
   flex-wrap: wrap;
