@@ -1,64 +1,24 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Blood Bucket</title>
-  <link rel="stylesheet" href="/static/style.css" />
-</head>
-<body>
-  <header>
-    <div class="container">
-      <div class="logo">🩸 <strong>BLOOD BUCKET</strong></div>
-      <nav>
-        <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Volunteer</a></li>
-          <li><a href="#">Donors</a></li>
-          <li><a href="#">Blood Group</a></li>
-          <li><a href="#">Contact</a></li>
-          <li><a href="#" class="donor-btn">Join as Donor</a></li>
-          
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <section class="hero">
-    <div class="hero-text">
-      <h1>Donate Blood To Save Life</h1>
-      <p>BloodBank is a responsive blood bank and donor CMS. Agents can register and manage donors easily.</p>
-      <div class="cta-buttons">
-        <a href="/signup" class="btn-primary">Join Now</a>
-        <a href="/login" class="btn-outline">Login</a>
-      </div>
-    </div>
-    <div class="hero-image">
-      <img src="/static/assets/images/donate_illustration.png" alt="Blood donation" />
-    </div>
-  </section>
-
-  <script src="/static/app.js"></script>
-</body>
-</html> -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Blood Bucket</title>
   <link rel="stylesheet" href="/static/style.css" />
 </head>
+
 <body>
   <header>
     <div class="container">
       <div class="logo">🩸 <strong>BLOOD BUCKET</strong></div>
       <nav>
-       <a href="">Home</a>
-       <a href="">About</a>
-       <a href="/login">Login</a>
-      <a href="/signup" class="btn-header">Join As Donor</a>
+        <a href="#">Home</a>
+        <a href="#about">About</a>
+        <a href="#why">Why Donate?</a>
+        <a href="#how">How It Works</a>
+        <a href="/login">Login</a>
+        <a href="/signup" class="btn-header">Join As Donor</a>
       </nav>
     </div>
   </header>
@@ -74,10 +34,65 @@
     </div>
     <div class="hero-image">
       <img src="/assets/background image.png" alt="Blood donation" />
-      <a href="" class="request-btn">Request</a>
     </div>
   </section>
+  
+  <div class="sec-container">
+    <section id="about">
+      <h2 class="section-title">About Us</h2>
+      <p class="section-subtitle">We connect blood donors with hospitals in need through a smooth and modern platform
+        built to save lives faster.</p>
+    </section>
+
+    <section id="why">
+      <h2 class="section-title">Why Donate Blood?</h2>
+      <div class="features">
+        <div class="feature-box">
+          <h3>Save Lives</h3>
+          <p>Your single donation can save up to 3 lives.</p>
+        </div>
+        <div class="feature-box">
+          <h3>Community Impact</h3>
+          <p>Help your local hospitals and emergency centers.</p>
+        </div>
+        <div class="feature-box">
+          <h3>Free Health Checkup</h3>
+          <p>All donors receive a free basic medical screening.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="how">
+      <h2 class="section-title">How It Works</h2>
+      <div class="features">
+        <div class="feature-box">
+          <h3>Step 1</h3>
+          <p>Sign up and create your donor profile.</p>
+        </div>
+        <div class="feature-box">
+          <h3>Step 2</h3>
+          <p>Get matched to a nearby request automatically.</p>
+        </div>
+        <div class="feature-box">
+          <h3>Step 3</h3>
+          <p>Donate and make a difference in minutes.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="testimonials">
+      <h2 class="section-title">What Donors Say</h2>
+      <p class="testimonial">"The process was smooth and fast. I never felt more proud to be part of something that
+        matters." – Ayaan M.</p>
+    </section>
+    </section>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Blood Bucket. All rights reserved.</p>
+  </footer>
 
   <script src="/static/app.js"></script>
 </body>
+
 </html>

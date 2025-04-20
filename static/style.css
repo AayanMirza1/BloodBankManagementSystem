@@ -177,5 +177,121 @@ nav ul li a:hover {
   background-color: darkred;
 }
 
+/* Hero Section */
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 150px 150px;
+  background: #fff3f3;
+}
+
+.hero-text {
+  max-width: 700px;
+}
+
+.hero-text h1 {
+  font-size: 2.5rem;
+  color: #d6002f;
+  margin-bottom: 20px;
+}
+
+.hero-text p {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+}
+
+.cta-buttons a {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background-color: #d6002f;
+  color: #fff;
+}
+
+.btn-outline {
+  border: 2px solid #d6002f;
+  color: #d6002f;
+  background: transparent;
+}
+
+.hero-image img {
+  width: 100%;
+  max-width: 450px;
+  margin-top: 30px;
+}
+
+.sec-container {
+  background-color: #222;
+}
+
+
+/* Sections */
+section {
+  padding: 60px 40px;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  color: #d6002f;
+  margin-bottom: 15px;
+}
+
+.section-subtitle {
+  color: #ffff;
+  font-size: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto 40px;
+}
+
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.feature-box {
+  background-color: #fff;
+  border: 1px solid #eee;
+  padding: 50px 50px;
+  border-radius: 10px;
+  width: 300px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+
+.feature-box h3 {
+  color: #d6002f;
+  margin-bottom: 10px;
+}
+
+/* Testimonials */
+.testimonials {
+  background-color: #fff7f7;
+}
+
+.testimonial {
+  font-style: italic;
+  max-width: 600px;
+  margin: 0 auto;
+  color: #555;
+}
+
+/* Footer */
+footer {
+  background-color: #222;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+
 
 
