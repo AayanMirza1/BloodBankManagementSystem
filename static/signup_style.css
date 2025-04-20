@@ -31,7 +31,7 @@ body.fade-out {
 
 .left {
   flex: 1;
-  background: linear-gradient(to bottom, #36a2f8, #6e62ff);
+  background: linear-gradient(to bottom, #d70000, #eb8a8a);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,9 +41,9 @@ body.fade-out {
 }
 
 .left img {
-  max-width: 90%;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  max-width: 250px;
+  border-radius: 150px;
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.5);
   margin-bottom: 20px;
 }
 
@@ -65,7 +65,7 @@ body.fade-out {
   margin-bottom: 24px;
   font-size: 32px;
   font-weight: 700;
-  color: #2c2d9f;
+  color: #d70000;
   text-align: center;
 }
 
@@ -136,7 +136,7 @@ body.fade-out {
 }
 
 .submit-btn {
-  background: #4a64f5;
+  background: #d70000;
   color: white;
   padding: 16px;
   border: none;
@@ -150,7 +150,12 @@ body.fade-out {
 }
 
 .submit-btn:hover {
-  background: #3747c6;
+  background: #b00000;
+}
+
+.submit-btn:active {
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, .5);
+  transition: 0.15s;
 }
 
 .switch-link {
@@ -160,9 +165,14 @@ body.fade-out {
 }
 
 .switch-link a {
-  color: #4a64f5;
+  color: #d70000;
   text-decoration: none;
   font-weight: 600;
+}
+
+.switch-link a:active {
+    opacity: 0.3;
+    transition: 0.15s;
 }
 
 /* Radio Buttons */
