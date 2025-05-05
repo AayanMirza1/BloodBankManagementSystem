@@ -1,18 +1,18 @@
-// === Supabase Configuration ===
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
+// Supabase ka setup ho raha hai yahan
 const supabase = createClient(
   "https://xfasfldsoqiciqnfbauf.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmYXNmbGRzb3FpY2lxbmZiYXVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NzA1MjAsImV4cCI6MjA2MDQ0NjUyMH0.egaYl_7zGqtGwNtHpsIRYVT394UfOK2VZOIQMRIC7Ks"
 );
 
-// === Auth Guard for Admin Only Access ===
+// Sirf admin users ko access dene ke liye guard
 (async () => {
   const { data: sessionData, error } = await supabase.auth.getSession();
   const session = sessionData?.session;
 
   if (!session || error) {
-    console.warn("🔒 Not logged in. Redirecting...");
+    console.warn("🔒 Login nahi hai. Login page par le ja rahe hain...");
     return (window.location.href = "login");
   }
 
@@ -23,13 +23,12 @@ const supabase = createClient(
     .single();
 
   if (!profile || profile.register_as !== "admin") {
-    console.warn("⛔ Unauthorized user. Redirecting...");
+    console.warn("⛔ Unauthorized user. Login page par le ja rahe hain...");
     return (window.location.href = "login");
   }
 })();
 
-
-// === Logout Handler ===
+// Logout button ka kaam
 const logoutBtn = document.getElementById("logoutBtn");
 if (logoutBtn) {
   logoutBtn.addEventListener("click", async () => {
@@ -38,72 +37,51 @@ if (logoutBtn) {
   });
 }
 
-// === Approval Logic ===
+// Request ko approve karne ka logic
 window.approveRequest = async (id, bloodGroup, unit) => {
   try {
-    const intUnit = parseInt(unit); // 🔥 Cast it here
+    const intUnit = parseInt(unit);
     console.log("Approving request:", id, bloodGroup, intUnit);
-    
 
-
-    // 1. Call RPC
+    // Stock kam karne ke liye RPC ko call kar rahe hain
     const { data: rpcData, error: stockErr } = await supabase.rpc("decrement_stock", {
       blood_group_input: bloodGroup.trim().toUpperCase(),
-      requested_units: parseInt(unit),
+      requested_units: intUnit,
     });
-    
+
     console.log("🩸 RPC Data:", rpcData);
-    console.log("⚙️ RPC Response:", rpcData);
-    console.log("⚠️ RPC Error:", stockErr);
-    
+
     if (stockErr) {
       console.error("❌ Stock decrement error:", stockErr);
-      
-      // If Supabase function returns a custom error message
       if (stockErr.message.includes("Not enough units")) {
-        return alert("❌ Not enough units available in stock for this blood group.");
+        return alert("❌ Stock mein units kam hain.");
       }
-    
-      return alert("❌ Failed to decrement stock: " + stockErr.message);
+      return alert("❌ Stock update fail: " + stockErr.message);
     }
-    
 
-    // 2. Update status
+    // Status update kar rahe hain 'approved' mein
     const { error: updateErr } = await supabase
       .from("requests")
       .update({ status: "approved" })
       .eq("id", id);
 
     if (updateErr) {
-      console.error("❌ Request update error:", updateErr);
-      alert("❌ Failed to approve request: " + updateErr.message);
+      console.error("❌ Update error:", updateErr);
+      alert("❌ Request approve nahi ho paya: " + updateErr.message);
       return;
     }
 
     alert("✅ Request approved!");
-
-    // 3. Delay & Refresh
-    
-      loadDashboard();
-      loadRequestSection();
-    
-
-    console.log("👀 ID:", id);
-    console.log("🩸 Blood Group:", bloodGroup);
-    console.log("📦 Unit (original):", unit, "type:", typeof unit);
-    console.log("📦 Unit (casted):", parseInt(unit), "type:", typeof parseInt(unit));
-
+    loadDashboard();
+    loadRequestSection();
 
   } catch (err) {
     console.error("❌ Unexpected error:", err);
-    alert("❌ Unexpected error occurred.");
+    alert("❌ Kuch galat ho gaya.");
   }
 };
 
-
-
-
-
+// Request ko reject karne ka logic
 window.rejectRequest = async (id) => {
   try {
     console.log("Rejecting request:", id);
@@ -114,33 +92,30 @@ window.rejectRequest = async (id) => {
       .eq("id", id);
 
     if (error) {
-      console.error("❌ Error rejecting request:", error);
-      alert("❌ Failed to reject request: " + error.message);
+      console.error("❌ Reject error:", error);
+      alert("❌ Request reject nahi ho paya: " + error.message);
       return;
     }
 
     alert("❌ Request rejected.");
     loadRequestSection();
   } catch (err) {
-    console.error("❌ Unexpected error rejecting request:", err);
-    alert("❌ Unexpected error occurred.");
+    console.error("❌ Unexpected error:", err);
+    alert("❌ Kuch galat ho gaya.");
   }
 };
 
-
-// === Fix form button default behavior ===
+// Sab buttons ka default behavior hata rahe hain (jaise form submit)
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("button").forEach(btn => {
     btn.type = "button";
   });
 });
 
-
-// === Sidebar Navigation Logic ===
+// Dashboard load karne ka kaam (stock & summary cards)
 const contentArea = document.getElementById("dashboard-content");
 
 const loadDashboard = async () => {
-  const contentArea = document.getElementById("dashboard-content");
   contentArea.innerHTML = `
     <div class="dashboard-cards blood-stock" id="blood-stock-cards">Loading blood stock...</div>
     <div class="dashboard-cards summary" id="summary-cards"></div>
@@ -149,7 +124,7 @@ const loadDashboard = async () => {
   const stockContainer = document.getElementById("blood-stock-cards");
   const summaryContainer = document.getElementById("summary-cards");
 
-  // Fetch stock data
+  // Blood stock data fetch kar rahe hain
   const { data: stock, error: stockError } = await supabase.from("stock").select("*");
   const bloodGroups = ["A+", "B+", "O+", "AB+", "A-", "B-", "O-", "AB-"];
 
@@ -169,7 +144,7 @@ const loadDashboard = async () => {
     `;
   });
 
-  // Fetch Summary Stats
+  // Summary data fetch kar rahe hain (donors, requests, etc.)
   const [{ count: donorsCount }, { count: requestCount }, { count: approvedCount }] = await Promise.all([
     supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "donor"),
     supabase.from("requests").select("id", { count: "exact", head: true }),
@@ -178,7 +153,7 @@ const loadDashboard = async () => {
 
   const totalUnits = stock?.reduce((sum, s) => sum + (s.units || 0), 0) ?? 0;
 
-  // Append Summary Cards
+  // Summary cards show kar rahe hain
   summaryContainer.innerHTML = `
   <div class="card card-total">
     <h3>Total Donors <i class="fas fa-users blue"></i></h3>
@@ -199,8 +174,8 @@ const loadDashboard = async () => {
 `;
 };
 
-loadDashboard();
 
+loadDashboard();
 
 // const loadDashboard = async () => {
 //     const contentArea = document.getElementById("dashboard-content");
@@ -251,201 +226,202 @@ loadDashboard();
 //   };
   
 
+// Donor section ko load karne ka kaam
 const loadDonorSection = async () => {
-    contentArea.innerHTML = `
-      <h2>Registered Donors</h2>
-      <table class="styled-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Blood Group</th>
-            <th>City</th>
-            <th>Last Donation</th>
-            <th>Disease</th>
-            <th>Age</th>
-            <th>Gender</th>
-          </tr>
-        </thead>
-        <tbody id="donor-table-body">
-          <tr><td colspan="8">Loading donors...</td></tr>
-        </tbody>
-      </table>
-    `;
-  
-    const { data: donors, error } = await supabase
-      .from("profiles")
-      .select("name, email, blood_group, city, last_donation, disease, age, gender")
-      .eq("role", "donor");
-  
-    const tableBody = document.getElementById("donor-table-body");
-  
-    if (error || !donors) {
-      tableBody.innerHTML = `<tr><td colspan="8">Error loading donors.</td></tr>`;
-      return;
-    }
-  
-    if (donors.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="8">No donors found.</td></tr>`;
-      return;
-    }
-  
-    tableBody.innerHTML = "";
-  
-    donors.forEach((d) => {
-      tableBody.innerHTML += `
-        <tr>
-          <td>${d.name}</td>
-          <td>${d.email}</td>
-          <td>${d.blood_group || "-"}</td>
-          <td>${d.city || "-"}</td>
-          <td>${d.last_donation || "-"}</td>
-          <td>${d.disease || "-"}</td>
-          <td>${d.age || "-"}</td>
-          <td>${d.gender || "-"}</td>
-        </tr>
-      `;
-    });
-};
-  
-  
-
-const loadPatientSection = async () => {
   contentArea.innerHTML = `
-    <h2>Patients</h2>
+    <h2>Registered Donors</h2>
     <table class="styled-table">
       <thead>
         <tr>
           <th>Name</th>
           <th>Email</th>
-          <th>Age</th>
-          <th>Gender</th>
           <th>Blood Group</th>
           <th>City</th>
+          <th>Last Donation</th>
+          <th>Disease</th>
+          <th>Age</th>
+          <th>Gender</th>
         </tr>
       </thead>
-      <tbody id="patient-table-body">
-        <tr><td colspan="6">Loading patients...</td></tr>
+      <tbody id="donor-table-body">
+        <tr><td colspan="8">Loading donors...</td></tr>
       </tbody>
     </table>
   `;
 
-  const { data: patients, error } = await supabase
+  // Supabase se donor data fetch kar rahe hain
+  const { data: donors, error } = await supabase
     .from("profiles")
-    .select("name, email, age, gender, blood_group, city")
-    .eq("register_as", "patient"); // ✅ this is the correct field to filter
+    .select("name, email, blood_group, city, last_donation, disease, age, gender")
+    .eq("role", "donor");
 
-  const tableBody = document.getElementById("patient-table-body");
+  const tableBody = document.getElementById("donor-table-body");
 
-  if (error || !patients) {
-    tableBody.innerHTML = `<tr><td colspan="6">Error loading patients.</td></tr>`;
+  if (error || !donors) {
+    tableBody.innerHTML = `<tr><td colspan="8">Error loading donors.</td></tr>`;
     return;
   }
 
-  if (patients.length === 0) {
-    tableBody.innerHTML = `<tr><td colspan="6">No patients found.</td></tr>`;
+  if (donors.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="8">No donors found.</td></tr>`;
     return;
   }
 
   tableBody.innerHTML = "";
 
-  patients.forEach((p) => {
+  donors.forEach((d) => {
     tableBody.innerHTML += `
       <tr>
-        <td>${p.name}</td>
-        <td>${p.email}</td>
-        <td>${p.age || "-"}</td>
-        <td>${p.gender || "-"}</td>
-        <td>${p.blood_group || "-"}</td>
-        <td>${p.city || "-"}</td>
+        <td>${d.name}</td>
+        <td>${d.email}</td>
+        <td>${d.blood_group || "-"}</td>
+        <td>${d.city || "-"}</td>
+        <td>${d.last_donation || "-"}</td>
+        <td>${d.disease || "-"}</td>
+        <td>${d.age || "-"}</td>
+        <td>${d.gender || "-"}</td>
       </tr>
     `;
   });
 };
 
-  
-  
-
-// === Load Donation Section ===
-const loadDonationSection = async () => {
-  contentArea.innerHTML = `
-    <h2>Donations</h2>
-    <table class="styled-table">
-      <thead>
-        <tr>
-          <th>Donor</th>
-          <th>Blood Group</th>
-          <th>Units</th>
-          <th>Date</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="donation-table-body">
-        <tr><td colspan="6">Loading donations...</td></tr>
-      </tbody>
-    </table>
-  `;
-
-  const { data: donations, error } = await supabase
-    .from("donations")
-    .select("*")
-    .order("donation_date", { ascending: false });
-
-  const tableBody = document.getElementById("donation-table-body");
-
-  if (error || !donations) {
-    tableBody.innerHTML = `<tr><td colspan="6">Error loading donations.</td></tr>`;
-    return;
-  }
-
-  if (donations.length === 0) {
-    tableBody.innerHTML = `<tr><td colspan="6">No donations found.</td></tr>`;
-    return;
-  }
-
-  tableBody.innerHTML = "";
-
-  for (const d of donations) {
-    let donorName = "Unknown";
-
-    if (d.donor_id) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("name")
-        .eq("id", d.donor_id)
-        .single();
-
-      if (profile?.name) donorName = profile.name;
-    }
-
-    const isPending = d.status === "pending";
-
-    tableBody.innerHTML += `
-        <tr>
-        <td>${donorName}</td>
-        <td>${d.blood_group}</td>
-        <td>${d.units}</td>
-        <td>${d.donation_date}</td>
-        <td>${d.status}</td>
-        <td>
-          ${isPending
-            ? `
-                <button type="button" class="btn-approve" onclick="handleDonation('${d.id}', '${d.blood_group}', ${d.units}, 'approved')">Approve</button>
-                <button type="button" class="btn-reject" onclick="handleDonation('${d.id}', '${d.blood_group}', ${d.units}, 'rejected')">Reject</button>
-              `
-            : d.status === "approved"
-              ? `<span class="status approved">✔ Approved</span>`
-              : `<span class="status rejected">✘ Rejected</span>`
-          }
-        </td>
+// Patient section ko load karne ka kaam
+const loadPatientSection = async () => {
+contentArea.innerHTML = `
+  <h2>Patients</h2>
+  <table class="styled-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Age</th>
+        <th>Gender</th>
+        <th>Blood Group</th>
+        <th>City</th>
       </tr>
-    `;
+    </thead>
+    <tbody id="patient-table-body">
+      <tr><td colspan="6">Loading patients...</td></tr>
+    </tbody>
+  </table>
+`;
 
+// Supabase se patient data fetch kar rahe hain
+const { data: patients, error } = await supabase
+  .from("profiles")
+  .select("name, email, age, gender, blood_group, city")
+  .eq("register_as", "patient");
+
+const tableBody = document.getElementById("patient-table-body");
+
+if (error || !patients) {
+  tableBody.innerHTML = `<tr><td colspan="6">Error loading patients.</td></tr>`;
+  return;
+}
+
+if (patients.length === 0) {
+  tableBody.innerHTML = `<tr><td colspan="6">No patients found.</td></tr>`;
+  return;
+}
+
+tableBody.innerHTML = "";
+
+patients.forEach((p) => {
+  tableBody.innerHTML += `
+    <tr>
+      <td>${p.name}</td>
+      <td>${p.email}</td>
+      <td>${p.age || "-"}</td>
+      <td>${p.gender || "-"}</td>
+      <td>${p.blood_group || "-"}</td>
+      <td>${p.city || "-"}</td>
+    </tr>
+  `;
+});
+};
+
+// Donation section ko load karne ka kaam
+const loadDonationSection = async () => {
+contentArea.innerHTML = `
+  <h2>Donations</h2>
+  <table class="styled-table">
+    <thead>
+      <tr>
+        <th>Donor</th>
+        <th>Blood Group</th>
+        <th>Units</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="donation-table-body">
+      <tr><td colspan="6">Loading donations...</td></tr>
+    </tbody>
+  </table>
+`;
+
+// Supabase se donation data fetch kar rahe hain
+const { data: donations, error } = await supabase
+  .from("donations")
+  .select("*")
+  .order("donation_date", { ascending: false });
+
+const tableBody = document.getElementById("donation-table-body");
+
+if (error || !donations) {
+  tableBody.innerHTML = `<tr><td colspan="6">Error loading donations.</td></tr>`;
+  return;
+}
+
+if (donations.length === 0) {
+  tableBody.innerHTML = `<tr><td colspan="6">No donations found.</td></tr>`;
+  return;
+}
+
+tableBody.innerHTML = "";
+
+for (const d of donations) {
+  let donorName = "Unknown";
+
+  // Donor ka naam fetch karne ke liye
+  if (d.donor_id) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("name")
+      .eq("id", d.donor_id)
+      .single();
+
+    if (profile?.name) donorName = profile.name;
   }
+
+  const isPending = d.status === "pending";
+
+  tableBody.innerHTML += `
+      <tr>
+      <td>${donorName}</td>
+      <td>${d.blood_group}</td>
+      <td>${d.units}</td>
+      <td>${d.donation_date}</td>
+      <td>${d.status}</td>
+      <td>
+        ${isPending
+          ? `
+              <button type="button" class="btn-approve" onclick="handleDonation('${d.id}', '${d.blood_group}', ${d.units}, 'approved')">Approve</button>
+              <button type="button" class="btn-reject" onclick="handleDonation('${d.id}', '${d.blood_group}', ${d.units}, 'rejected')">Reject</button>
+            `
+          : d.status === "approved"
+            ? `<span class="status approved">✔ Approved</span>`
+            : `<span class="status rejected">✘ Rejected</span>`
+        }
+      </td>
+    </tr>
+  `;
+}
 };
 
 
+// Blood requests section ko load karne ka kaam
 const loadRequestSection = async () => {
   contentArea.innerHTML = `
     <h2>Blood Requests</h2>
@@ -467,13 +443,13 @@ const loadRequestSection = async () => {
     </table>
   `;
 
+  // Supabase se pending requests fetch kar rahe hain
   const { data: requests, error } = await supabase
     .from("requests")
     .select("*")
     .eq("status", "pending");
 
   console.log("Requests Data:", requests);
-  console.log("Error:", error);
 
   const table = document.getElementById("request-table-body");
 
@@ -484,17 +460,16 @@ const loadRequestSection = async () => {
 
   table.innerHTML = "";
 
-  // 💡 manually get patient names using profile_id
+  // Har request ke liye patient ka naam fetch kar rahe hain (profile_id use karke)
   for (const r of requests) {
     let name = "Unknown";
 
     if (r.profile_id) {
-      const { data: profile, error: profileError } = await supabase
+      const { data: profile } = await supabase
         .from("profiles")
         .select("name")
         .eq("id", r.profile_id)
         .single();
-
 
       if (profile && profile.name) name = profile.name;
     }
@@ -516,131 +491,131 @@ const loadRequestSection = async () => {
   }
 };
 
-  
+// Request ko reject karne ka simple logic
+window.rejectRequest = async (id) => {
+  await supabase
+    .from("requests")
+    .update({ status: "rejected" })
+    .eq("id", id);
 
-  
-  window.rejectRequest = async (id) => {
-    await supabase
-      .from("requests")
-      .update({ status: "rejected" })
-      .eq("id", id);
-  
-    loadRequestSection();
-  };
-  
-  
+  loadRequestSection();
+};
 
-  const loadHistorySection = async () => {
-    contentArea.innerHTML = `
-      <h2>Request History</h2>
-      <table class="styled-table">
-        <thead>
-          <tr>
-            <th>Patient</th>
-            <th>Age</th>
-            <th>Reason</th>
-            <th>Blood Group</th>
-            <th>Unit (ml)</th>
-            <th>Status</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody id="history-table-body">
-          <tr><td colspan="7">Loading...</td></tr>
-        </tbody>
-      </table>
-    `;
-  
-    const { data: history, error } = await supabase
-      .from("requests")
-      .select("*")
-      .in("status", ["approved", "rejected"])
-      .order("created_at", { ascending: false });
-  
-    const tableBody = document.getElementById("history-table-body");
-  
-    if (error || !history || history.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="7">No past requests found.</td></tr>`;
-      return;
-    }
-  
-    tableBody.innerHTML = "";
-  
-    for (const r of history) {
-      let name = "Unknown";
-      if (r.profile_id) {
-        const { data: profile } = await supabase
+// Request history ko load karne ka kaam (approved + rejected requests)
+const loadHistorySection = async () => {
+  contentArea.innerHTML = `
+    <h2>Request History</h2>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Age</th>
+          <th>Reason</th>
+          <th>Blood Group</th>
+          <th>Unit (ml)</th>
+          <th>Status</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody id="history-table-body">
+        <tr><td colspan="7">Loading...</td></tr>
+      </tbody>
+    </table>
+  `;
+
+  // Supabase se history fetch kar rahe hain (approved & rejected requests)
+  const { data: history, error } = await supabase
+    .from("requests")
+    .select("*")
+    .in("status", ["approved", "rejected"])
+    .order("created_at", { ascending: false });
+
+  const tableBody = document.getElementById("history-table-body");
+
+  if (error || !history || history.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="7">No past requests found.</td></tr>`;
+    return;
+  }
+
+  tableBody.innerHTML = "";
+
+  for (const r of history) {
+    let name = "Unknown";
+
+    // Patient ka naam fetch kar rahe hain (profile_id use karke)
+    if (r.profile_id) {
+      const { data: profile } = await supabase
         .from("profiles")
         .select("name")
         .eq("id", r.profile_id)
         .single();
-      
-        if (profile?.name) name = profile.name;
-      }
-  
-      tableBody.innerHTML += `
-        <tr>
-          <td>${name}</td>
-          <td>${r.age || "-"}</td>
-          <td>${r.reason || "-"}</td>
-          <td>${r.blood_group}</td>
-          <td>${r.unit}</td>
-          <td>${r.status}</td>
-          <td>${new Date(r.created_at).toLocaleDateString()}</td>
-        </tr>
-      `;
-    }
-  };
-  
-  
 
-  const loadStockSection = async () => {
-    contentArea.innerHTML = `
-      <h2>Blood Stock</h2>
-      <table class="styled-table">
-        <thead>
-          <tr>
-            <th>Blood Group</th>
-            <th>Available Units</th>
-          </tr>
-        </thead>
-        <tbody id="stock-table-body">
-          <tr><td colspan="2">Loading...</td></tr>
-        </tbody>
-      </table>
+      if (profile?.name) name = profile.name;
+    }
+
+    tableBody.innerHTML += `
+      <tr>
+        <td>${name}</td>
+        <td>${r.age || "-"}</td>
+        <td>${r.reason || "-"}</td>
+        <td>${r.blood_group}</td>
+        <td>${r.unit}</td>
+        <td>${r.status}</td>
+        <td>${new Date(r.created_at).toLocaleDateString()}</td>
+      </tr>
     `;
-  
-    const { data: stock, error } = await supabase
-      .from("stock")
-      .select("*")
-      .order("blood_group", { ascending: true });
-  
-    const tableBody = document.getElementById("stock-table-body");
-  
-    if (error || !stock) {
-      tableBody.innerHTML = `<tr><td colspan="2">Error loading stock.</td></tr>`;
-      return;
-    }
-  
-    if (stock.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="2">No blood stock data found.</td></tr>`;
-      return;
-    }
-  
-    tableBody.innerHTML = "";
-  
-    stock.forEach((item) => {
-      tableBody.innerHTML += `
-        <tr>
-          <td>${item.blood_group}</td>
-          <td>${item.units}</td>
-        </tr>
-      `;
-    });
-  };
-  
+  }
+};
 
-// === Event Listeners for Sidebar Buttons ===
+  
+// Blood stock section ko load karne ka kaam
+const loadStockSection = async () => {
+  contentArea.innerHTML = `
+    <h2>Blood Stock</h2>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Blood Group</th>
+          <th>Available Units</th>
+        </tr>
+      </thead>
+      <tbody id="stock-table-body">
+        <tr><td colspan="2">Loading...</td></tr>
+      </tbody>
+    </table>
+  `;
+
+  // Supabase se stock data fetch kar rahe hain
+  const { data: stock, error } = await supabase
+    .from("stock")
+    .select("*")
+    .order("blood_group", { ascending: true });
+
+  const tableBody = document.getElementById("stock-table-body");
+
+  if (error || !stock) {
+    tableBody.innerHTML = `<tr><td colspan="2">Error loading stock.</td></tr>`;
+    return;
+  }
+
+  if (stock.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="2">No blood stock data found.</td></tr>`;
+    return;
+  }
+
+  tableBody.innerHTML = "";
+
+  stock.forEach((item) => {
+    tableBody.innerHTML += `
+      <tr>
+        <td>${item.blood_group}</td>
+        <td>${item.units}</td>
+      </tr>
+    `;
+  });
+};
+
+// Sidebar ke saare buttons ko set kar rahe hain
 document.getElementById("dashboardBtn").onclick = loadDashboard;
 document.getElementById("donorBtn").onclick = loadDonorSection;
 document.getElementById("patientBtn").onclick = loadPatientSection;
@@ -649,27 +624,26 @@ document.getElementById("requestsBtn").onclick = loadRequestSection;
 document.getElementById("historyBtn").onclick = loadHistorySection;
 document.getElementById("stockBtn").onclick = loadStockSection;
 
-// Auto-load the dashboard on initial page load
+// Page load hote hi dashboard auto-load karna
 window.addEventListener("DOMContentLoaded", () => {
-    loadDashboard();
-  });
+  loadDashboard();
+});
 
-//-----UpdateLogic-------
+// Donation status ko update karne ka kaam
 window.updateDonationStatus = async (id, newStatus) => {
-    const { error } = await supabase
-      .from("donations")
-      .update({ status: newStatus })
-      .eq("id", id);
-  
-    if (!error) {
-      loadDonationSection(); // Refresh list
-    } else {
-      alert("Failed to update donation status.");
-    }
+  const { error } = await supabase
+    .from("donations")
+    .update({ status: newStatus })
+    .eq("id", id);
+
+  if (!error) {
+    loadDonationSection(); // List ko refresh kar rahe hain
+  } else {
+    alert("Failed to update donation status.");
+  }
 };
 
-//status update function for requests
-
+// Request status ko update karne ka kaam
 window.updateRequestStatus = async (id, newStatus) => {
   const { error } = await supabase
     .from("requests")
@@ -677,15 +651,16 @@ window.updateRequestStatus = async (id, newStatus) => {
     .eq("id", id);
 
   if (!error) {
-    loadRequestSection(); // Refresh list
+    loadRequestSection(); // List ko refresh kar rahe hain
   } else {
     alert("Failed to update request status.");
   }
 };
 
+// Donation handle karne ka logic (approve/reject + stock update)
 window.handleDonation = async (donationId, bloodGroup, units, decision) => {
   try {
-    // 1. Update donation status
+    // Donation ka status update kar rahe hain
     const { error: updateErr } = await supabase
       .from("donations")
       .update({ status: decision })
@@ -696,7 +671,7 @@ window.handleDonation = async (donationId, bloodGroup, units, decision) => {
       return alert("❌ Failed to update donation status.");
     }
 
-    // 2. If approved, increment stock
+    // Agar approve hai toh stock bhi badha rahe hain
     if (decision === "approved") {
       const { data, error: rpcError } = await supabase.rpc("increment_stock", {
         blood_group_input: bloodGroup.trim(),
@@ -713,7 +688,7 @@ window.handleDonation = async (donationId, bloodGroup, units, decision) => {
 
     alert(`✅ Donation ${decision}`);
     
-    // ✅ Refresh the donation section so buttons are updated
+    // Donation list ko refresh kar rahe hain
     await loadDonationSection();
 
   } catch (err) {
@@ -721,4 +696,3 @@ window.handleDonation = async (donationId, bloodGroup, units, decision) => {
     alert("❌ Something went wrong.");
   }
 };
-
