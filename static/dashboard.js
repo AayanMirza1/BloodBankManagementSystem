@@ -1,6 +1,6 @@
-// === Supabase Configuration ===
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
+// Supabase ka connection setup yahan ho raha hai
 const supabase = createClient(
   "https://xfasfldsoqiciqnfbauf.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmYXNmbGRzb3FpY2lxbmZiYXVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NzA1MjAsImV4cCI6MjA2MDQ0NjUyMH0.egaYl_7zGqtGwNtHpsIRYVT394UfOK2VZOIQMRIC7Ks"
@@ -10,13 +10,13 @@ let currentUserId = null;
 let currentProfileId = null;
 const contentArea = document.getElementById("dashboard-content");
 
-// === Session & Auth Guard Initialization ===
+// Jab page load ho, session check karo & guard lagao
 async function initDashboard() {
   const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
   const session = sessionData?.session;
 
   if (!session || sessionError) {
-    console.warn("\u274C No valid session. Redirecting...");
+    console.warn("❌ Koi valid session nahi mila. Redirect kar rahe hain...");
     await supabase.auth.signOut();
     return (window.location.href = "login");
   }
@@ -30,18 +30,18 @@ async function initDashboard() {
     .single();
 
   if (!profile || profileErr) {
-    console.error("\u274C Failed to fetch profile:", profileErr);
+    console.error("❌ Profile fetch karne me error:", profileErr);
     await supabase.auth.signOut();
     return (window.location.href = "login");
   }
 
   currentProfileId = profile.id;
-  console.log("\u2705 Authenticated:", currentUserId, "| Profile ID:", currentProfileId);
+  console.log("✅ Authenticated:", currentUserId, "| Profile ID:", currentProfileId);
 
-  loadHome(); // Default load
+  loadHome(); // By default home load kar rahe hain
 }
 
-// === Logout Button Handler ===
+// Logout ka kaam
 const logoutBtn = document.getElementById("logoutBtn");
 if (logoutBtn) {
   logoutBtn.addEventListener("click", async () => {
@@ -50,10 +50,7 @@ if (logoutBtn) {
   });
 }
 
-// === Navigation Buttons ===
-// document.getElementById("homeBtn").addEventListener("click", loadHome);
-// document.getElementById("makeRequestBtn").addEventListener("click", loadRequestForm);
-// document.getElementById("historyBtn").addEventListener("click", loadRequestHistory);
+// Navigation buttons ko bind kar rahe hain
 document.addEventListener("DOMContentLoaded", () => {
   const homeBtn = document.getElementById("homeBtn");
   const makeRequestBtn = document.getElementById("makeRequestBtn");
@@ -72,14 +69,10 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "login";
   });
 
-  // Init dashboard after bindings
-  initDashboard();
+  initDashboard(); // Sab bind hone ke baad init chalayenge
 });
 
-
-
-
-// === Home View ===
+// Dashboard ka Home view
 async function loadHome() {
   if (!currentProfileId) return window.location.href = "login";
 
@@ -133,7 +126,7 @@ async function loadHome() {
   `;
 }
 
-// === Request Form View ===
+// Blood request form load karne ka kaam
 function loadRequestForm() {
   contentArea.innerHTML = `
     <h2>Make a Blood Request</h2>
@@ -160,7 +153,7 @@ function loadRequestForm() {
       return (window.location.href = "login");
     }
 
-    // ✅ Re-fetch the profile ID before making the request
+    // Profile ID dobara fetch kar rahe hain for safety
     const { data: profile, error: profileErr } = await supabase
       .from("profiles")
       .select("id")
@@ -168,8 +161,8 @@ function loadRequestForm() {
       .single();
 
     if (profileErr || !profile) {
-      console.error("❌ Failed to fetch profile for request:", profileErr);
-      alert("❌ Could not fetch your profile. Please try logging in again.");
+      console.error("❌ Profile fetch nahi ho paya:", profileErr);
+      alert("❌ Profile issue. Please login again.");
       return;
     }
 
@@ -188,7 +181,7 @@ function loadRequestForm() {
 
     if (error) {
       console.error("❌ Request insert failed:", error);
-      alert("❌ Failed to submit request.");
+      alert("❌ Request submit nahi ho paya.");
     } else {
       alert("✅ Request submitted!");
       document.getElementById("requestForm").reset();
@@ -197,8 +190,7 @@ function loadRequestForm() {
   });
 }
 
-
-// === Request History View ===
+// Request history ko dikha rahe hain
 async function loadRequestHistory() {
   if (!currentUserId || !currentProfileId) {
     alert("Session expired. Please login again.");
@@ -232,7 +224,7 @@ async function loadRequestHistory() {
   const body = document.getElementById("history-table-body");
 
   if (error || !data) {
-    body.innerHTML = `<tr><td colspan="5">Error loading request history.</td></tr>`;
+    body.innerHTML = `<tr><td colspan="5">Error loading history.</td></tr>`;
     return;
   }
 
@@ -255,11 +247,7 @@ async function loadRequestHistory() {
   });
 }
 
-// === On DOM Ready ===
-window.addEventListener("DOMContentLoaded", initDashboard);
-
-
-
+// Donation form ko load kar rahe hain
 function loadDonationForm() {
   contentArea.innerHTML = `
     <h2>Make a Donation</h2>
@@ -292,17 +280,16 @@ function loadDonationForm() {
 
     if (error) {
       console.error("❌ Donation insert failed:", error);
-      alert("❌ Failed to submit donation.");
+      alert("❌ Donation submit nahi ho paya.");
     } else {
       alert("✅ Donation submitted!");
       document.getElementById("donationForm").reset();
-      loadDonationHistory(); // go to history view after submit
+      loadDonationHistory();
     }
   });
 }
 
-
-
+// Donation history ko dikha rahe hain
 async function loadDonationHistory() {
   contentArea.innerHTML = `
     <h2>Your Donation History</h2>
@@ -351,5 +338,3 @@ async function loadDonationHistory() {
     `;
   });
 }
-
-
